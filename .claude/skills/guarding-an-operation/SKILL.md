@@ -95,15 +95,15 @@ principal** (a `Member`, a `Player`, a `Customer`, a `User`) and passing it to
 
 **Shipped, and that is nearly all of it:**
 
-| half           | classes                                                                                                                                        |
-|----------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| vocabulary     | `Actor`, `Authority`, `PrincipalKind`, `Permission` + `Permission/{Membership,Matching}Permission`, `Permissions`, `Ownership`                   |
-| the port       | `Gate` with its one `AccessDecisionGate` adapter, `PermissionVoter`, `RoleMap`                                                                  |
-| declaration    | `#[Guarded]`, `#[Unguarded(because:)]` (ADR 009 rule 13), `GuardedOperationsFactory`, `RpcMethod::permission()`, `bin/console app:access`        |
-| who is asking  | `CurrentActor` (the port) with `TokenCurrentActor`, `SessionCurrentActor` and `Ui/Console/Security/AssertedActor`                               |
+| half           | classes                                                                                                                                                                                          |
+|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| vocabulary     | `Actor`, `Authority`, `PrincipalKind`, `Permission` + `Permission/{Membership,Matching}Permission`, `Permissions`, `Ownership`                                                                   |
+| the port       | `Gate` with its one `AccessDecisionGate` adapter, `PermissionVoter`, `RoleMap`                                                                                                                   |
+| declaration    | `#[Guarded]`, `#[Unguarded(because:)]` (ADR 009 rule 13), `GuardedOperationsFactory`, `RpcMethod::permission()`, `bin/console app:access`                                                        |
+| who is asking  | `CurrentActor` (the port) with `TokenCurrentActor`, `SessionCurrentActor` and `Ui/Console/Security/AssertedActor`                                                                                |
 | authentication | `Credential`, `CredentialProvider`, `Credentials`, `SecurityUser`, `JwtTokenHandler`, `AccessToken(s)`, `RevokedToken(s)`, `AccessTokenGrant`, `BearerTokenRequestMatcher`, `SecurityEntryPoint` |
-| failures       | `UnauthenticatedThrowable`, `ForbiddenThrowable`, their failures in `Shared/Application/Security/`, `ErrorCode::Forbidden = -32005`              |
-| enforcement    | phpat's `no_security_outside_ui`, which excludes `App\Shared\Infrastructure\Security` by name                                                 |
+| failures       | `UnauthenticatedThrowable`, `ForbiddenThrowable`, their failures in `Shared/Application/Security/`, `ErrorCode::Forbidden = -32005`                                                              |
+| enforcement    | phpat's `no_security_outside_ui`, which excludes `App\Shared\Infrastructure\Security` by name                                                                                                    |
 
 `config/packages/security.php` is **written, not the recipe**: two firewalls told
 apart by the credential (ADR 009 rule 8), a `credentials` provider over the

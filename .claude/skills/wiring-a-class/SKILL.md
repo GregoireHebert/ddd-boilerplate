@@ -13,14 +13,14 @@ depends on what you added.
 Autoregisters `../src/**/{Api,Application,Console,Infrastructure}/` with these
 exclusions, each of which is a decision rather than an oversight:
 
-| Excluded                                                     | Why                                                                                          |
-|--------------------------------------------------------------|----------------------------------------------------------------------------------------------|
-| `src/**/Application/{Command,Query,Event}/`                  | serialized payloads, not services                                                              |
-| `src/Ui/Api/Resources/`                                      | metadata read by `resource_class_directories`, never constructed                               |
-| `src/Shared/Infrastructure/{ApiPlatform,Translation}/`       | they carry the **vendor's** namespace, so the `App\**` glob would derive a class that is not there |
-| all of `src/Shared/Application/`                             | ADR 004's read vocabulary and ADR 005's `Validation/` are values built with `new` at an edge   |
-| `Shared/Infrastructure/Security/{Actor,AccessToken,SecurityUser,Credential,RevokedToken,Guarded,Unguarded}.php` and `Permission/` | ADR 008's values, two Doctrine entities hydrated by reflection, two attributes and the enums |
-| `Kernel.php`                                                 |                                                                                                |
+| Excluded                                                                                                                          | Why                                                                                                |
+|-----------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| `src/**/Application/{Command,Query,Event}/`                                                                                       | serialized payloads, not services                                                                  |
+| `src/Ui/Api/Resources/`                                                                                                           | metadata read by `resource_class_directories`, never constructed                                   |
+| `src/Shared/Infrastructure/{ApiPlatform,Translation}/`                                                                            | they carry the **vendor's** namespace, so the `App\**` glob would derive a class that is not there |
+| all of `src/Shared/Application/`                                                                                                  | ADR 004's read vocabulary and ADR 005's `Validation/` are values built with `new` at an edge       |
+| `Shared/Infrastructure/Security/{Actor,AccessToken,SecurityUser,Credential,RevokedToken,Guarded,Unguarded}.php` and `Permission/` | ADR 008's values, two Doctrine entities hydrated by reflection, two attributes and the enums       |
+| `Kernel.php`                                                                                                                      |                                                                                                    |
 
 **The `Gate`, `PermissionVoter`, `RoleMap`, `Credentials`, `CredentialProvider`,
 `AccessTokens`, `RevokedTokens`, `JwtTokenHandler` and both `CurrentActor`
@@ -31,10 +31,10 @@ wrong about half of it.
 **Two extra PSR-4 roots** exist for the vendor-namespaced adapters and they are
 registered under the prefix they actually carry:
 
-| prefix          | resource                                   | excluded                                      |
-|-----------------|---------------------------------------------|-----------------------------------------------|
-| `ApiPlatform\`  | `src/Shared/Infrastructure/ApiPlatform/`    | `JsonRpc/JsonRpcResource.php`, being metadata |
-| `Translation\`  | `src/Shared/Infrastructure/Translation/`    | nothing                                       |
+| prefix          | resource                                  | excluded                                       |
+|-----------------|-------------------------------------------|------------------------------------------------|
+| `ApiPlatform\`  | `src/Shared/Infrastructure/ApiPlatform/`  | `JsonRpc/JsonRpcResource.php`, being metadata  |
+| `Translation\`  | `src/Shared/Infrastructure/Translation/`  | nothing                                        |
 
 > **Domain classes are not Symfony services; Application ones are.** Not a style
 > choice: Ecotone's Symfony bundle resolves every `#[CommandHandler]`,

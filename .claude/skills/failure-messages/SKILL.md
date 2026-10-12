@@ -17,7 +17,7 @@ gap**.
 | **A label**   | us, for a human, *about domain data* | us, into a catalogue                | the enum's backing value |
 | **Content**   | a user, a curator, a partner         | nobody; it is *authored* per locale | nothing, it is stored    |
 
-Row two is the one that gets misfiled. `BlockReason`, `BadgeCondition`,
+Row two is the one that may often get misfiled. A `BlockReason`, `BadgeCondition`,
 `TrustLevel`, `ProfileStatus` are closed sets we own; their human labels are
 hard-coded text *selected by* domain data, which is not the same as being domain
 data.

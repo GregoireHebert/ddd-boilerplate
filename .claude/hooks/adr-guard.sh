@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# adr-guard.sh -- a PreToolUse guard for the DDD/CQS teaching tree.
+# adr-guard.sh -- a PreToolUse guard for the DDD/CQS.
 #
 # It WARNS and never blocks. Every rule below is one an ADR already decided and
 # that a regex can see; the guard exists so that breaking one is loud rather

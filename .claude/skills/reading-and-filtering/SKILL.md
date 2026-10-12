@@ -193,7 +193,7 @@ whole API.
 
 ## Scoping is not filtering
 
-"My likes" comes from the principal. **A scoping value is never an exposed
+"My likes" comes from the principal user. **A scoping value is never an exposed
 parameter**: not a `QueryParameter`, not an `InputOption`, not a form field, and
 option B's declaration has to distinguish the two so the factory skips it.
 Scope in the query, never `array_filter` after the rows came back. See the

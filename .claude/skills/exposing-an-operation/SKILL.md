@@ -29,12 +29,6 @@ A capability belongs on **REST** when **all three** hold:
 If any fails, it is a method on `/rpc`. Not as a fallback: a capability that
 fails one of those is being described by a protocol that cannot see it.
 
-The four methods registered today all fail test 1. A `Badge` is a child of the
-`Member` aggregate with no address (and no `BadgeRepositoryInterface`,
-deliberately - adding one turns a child entity into a second aggregate root).
-`loseBadge` and `discardBadge` are different facts about the same badge and HTTP
-has one `DELETE`. A `Reputation` has an identity this application does not issue.
-
 ## REST side
 
 **Every write is its own resource.** `input:` and `output:` are not used. A

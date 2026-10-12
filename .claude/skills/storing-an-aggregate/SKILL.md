@@ -21,13 +21,13 @@ relational storage against everything else.
 
 ## Pick a path, in this order. Stop at the first that fits.
 
-| #  | When                                                                 | What it is                                                      | Lives in                                                            |
-|----|----------------------------------------------------------------------|-----------------------------------------------------------------|---------------------------------------------------------------------|
-| 1  | one table whose shape matches the aggregate                          | direct XML mapping, nothing else                                | `Matching`: `Like`, `Block`                                         |
-| 2  | the shape diverges, or there are value objects or a child collection | XML plus custom types plus an embeddable                        | `Membership`: `Member`, `Badge`; `Matching`: `Pair`                    |
-| 3  | the mapping *itself* needs isolating, or it is a projection          | a second `EntityManager` on the **same** connection             | the discovery feed; `ProfileJournal` uses the shadow-entity variant |
-| 4  | the data genuinely does not all live in one database                 | an `AggregateReader` + `AggregateWriter` per class, our tracker | Membership Plan, badge catalogue, reputation                               |
-| 5  | one change has to reach two stores                                   | outbox (eventually) or saga (in order)                          | pair notifications; member erasure                                  |
+| #  | When                                                                 | What it is                                                      | Lives in                                                             |
+|----|----------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------------|
+| 1  | one table whose shape matches the aggregate                          | direct XML mapping, nothing else                                | `Matching`: `Like`, `Block`                                          |
+| 2  | the shape diverges, or there are value objects or a child collection | XML plus custom types plus an embeddable                        | `Membership`: `Member`, `Badge`; `Matching`: `Pair`                  |
+| 3  | the mapping *itself* needs isolating, or it is a projection          | a second `EntityManager` on the **same** connection             | the discovery feed; `ProfileJournal` uses the shadow-entity variant  |
+| 4  | the data genuinely does not all live in one database                 | an `AggregateReader` + `AggregateWriter` per class, our tracker | Membership Plan, badge catalogue, reputation                         |
+| 5  | one change has to reach two stores                                   | outbox (eventually) or saga (in order)                          | pair notifications; member erasure                                   |
 
 **Path 2 absorbs almost everything that feels like it does not.** Reach past it
 only for the reason in the table, not because the mapping felt long.
