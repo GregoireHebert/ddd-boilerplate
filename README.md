@@ -120,4 +120,12 @@ whole arrangement.
 
 ## Licence
 
-MIT.
+Two licences, because this repository is two kinds of work.
+
+- **the code is MIT** (`LICENSE`). Use it, change it, ship it in something closed, no attribution
+  needed beyond keeping the notice. That is the whole point of a boilerplate;
+- **the documentation is CC BY 4.0** (`docs/LICENSE`), covering `docs/ADR/`, `docs/storage-map.md`
+  and the diagrams. Share it, translate it, adapt it, teach from it, including commercially;
+  attribution is the one condition.
+
+Copyright (c) 2026 Grégoire Hébert.

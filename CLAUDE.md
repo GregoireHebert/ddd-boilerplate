@@ -589,3 +589,27 @@ nowhere else. `domain()` and `application()` already excluded them by omission; 
 `Symfony\Bundle\SecurityBundle`: the violation to be afraid of is `Security::getUser()` autowired
 into a context's infrastructure service, which compiles, works in a request, and returns null in the
 worker and on the console.
+
+## Licence, and the one thing to get right about it
+
+**Two licences, split by kind of work rather than by directory convenience.**
+
+- **`LICENSE`, MIT**, covers everything under `src/`, `config/`, `tests/`, `bin/`, `public/`,
+  `templates/` and `translations/`;
+- **`docs/LICENSE`, CC BY 4.0**, covers `docs/ADR/`, `docs/storage-map.md` and `docs/images/`.
+
+Copyright (c) 2026 Grégoire Hébert.
+
+The split exists because MIT reads badly over prose: it grants rights to "the Software" and asks for
+the notice to be kept in "copies or substantial portions", neither of which maps onto an essay. CC
+BY 4.0 is built for prose and asks for the one thing worth asking: attribution.
+
+Two practical consequences when adding files:
+
+- **a new ADR or any other document under `docs/` is CC BY 4.0 by being there.** Do not add an MIT
+  header to it, and do not copy documentation prose into a source file's docblock expecting the
+  licence to follow it; it does not;
+- **do not paste third-party prose or diagrams into `docs/`** without checking their licence first.
+  CC BY 4.0 is a licence *you* grant, and you can only grant it over work you hold. The two
+  diagrams in `docs/images/` are the author's own.
+
