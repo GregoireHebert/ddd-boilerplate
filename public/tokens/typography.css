@@ -1,0 +1,67 @@
+/* The scale. Eleven styles, each a class you can put on an element.
+
+   The split worth knowing: anything the PRODUCT says in its own voice is set
+   in Fraunces (.voice, .display-*), and anything the INTERFACE says about
+   itself is set in Instrument Sans (.title, .body, .label, .meta). "gone, not
+   hidden" is the product talking. "Colour" above a select is not. */
+
+:root {
+  --step-display-xl: 44px;
+  --step-display-lg: 32px;
+  --step-display-md: 24px;
+  --step-voice: 18px;
+  --step-title: 19px;
+  --step-body: 16px;
+  --step-body-sm: 14px;
+  --step-label: 13px;
+  --step-meta: 12px;
+}
+
+.display-xl {
+  font: 600 var(--step-display-xl) / 46px var(--font-display);
+  letter-spacing: -.015em;
+}
+
+.display-lg {
+  font: 600 var(--step-display-lg) / 36px var(--font-display);
+  letter-spacing: -.01em;
+}
+
+.display-md {
+  font: 600 var(--step-display-md) / 30px var(--font-display);
+  letter-spacing: -.005em;
+}
+
+/* The product's own sentences: empty states, confirmations, the line that
+   explains a rule. Long enough to be read, not a label. */
+.voice {
+  font: 400 var(--step-voice) / 28px var(--font-display);
+  max-width: var(--measure);
+}
+
+.title  { font: 600 var(--step-title) / 24px var(--font-sans); letter-spacing: -.005em; }
+.body   { font: 400 var(--step-body) / 24px var(--font-sans); }
+.body-sm { font: 400 var(--step-body-sm) / 20px var(--font-sans); }
+.label  { font: 600 var(--step-label) / 16px var(--font-sans); letter-spacing: .01em; }
+.meta   { font: 500 var(--step-meta) / 16px var(--font-sans); color: var(--ink-faint); }
+
+/* Anything that ticks is mono and tabular, or the row reflows once a second
+   and the whole page twitches. (matching/06) */
+.clock {
+  font: 600 20px / 22px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.clock-sm {
+  font: 600 13px / 16px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Identifiers a person has to copy or compare: ULIDs, routing keys, violation
+   codes, exit codes. Never used for prose. */
+.code {
+  font: 400 13px / 20px var(--font-mono);
+  word-break: break-all;
+}

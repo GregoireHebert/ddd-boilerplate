@@ -1,0 +1,74 @@
+{#
+    Numbered page links under an offset list. `lists/Pagination`.
+
+    Parameters:
+      path     where every link points, usually `app.request.pathInfo`
+      query    the query parameters every link carries, as a hash. The partial overwrites `page`
+               and touches nothing else, so the filters travel across a page change without
+               being named one at a time
+      current  the page being shown
+      last     optional. The last page, when somebody paid for a count. Absent means nobody did
+      hasNext  optional, defaults false. Whether there is a page after this one
+      total    optional. How many rows the filtered set holds, when somebody paid for a count
+      noun     optional, defaults to `result`. What the count is counting
+      label    optional. The nav's accessible name, because a page may carry two lists
+
+    DESIGN SYSTEM RULE 1: A KEYSET LIST NEVER SHOWS A PAGE NUMBER, AND THIS PARTIAL IS NOTHING BUT
+    PAGE NUMBERS. So it is for offset feeds only, and a cursor feed MUST NOT include it. There is
+    no "next" arm here to borrow: `matching/01`'s discovery feed draws its own `.more` link from a
+    cursor, the two never appear on the same list, and the day somebody adds an `after` parameter to
+    this file the two mechanisms ADR 004 rule 8 keeps apart have met in a template.
+
+    The reason is in the port rather than in the markup. `Window::pages()` and `Window::slice()`
+    produce two different request shapes and nothing implements both, so a feed that could be
+    paginated by this partial is a feed whose read model already answered "page 3 of 42". A cursor
+    feed cannot answer it at any price: counting a set that moves while you walk it produces a
+    number that was true for nobody.
+
+    THE TWO ARMS BELOW ARE THE TWO PAGINATORS, and the difference is one query parameter the reader
+    chose rather than two designs.
+    `ApiPlatform\State\Pagination\PageOfPaginator` knows a last page because
+    somebody asked for `total=exact`, so every page is nameable and the whole row is drawn.
+    `PartialPageOfPaginator` knows only where it is, so this draws the page before, the page it is
+    on, and the page after. STILL NUMBERS, WHICH IS THE POINT: an offset window can always name the
+    page next to it even when nobody counted, and that is exactly what a cursor cannot do.
+
+    `hasNext` in the uncounted arm is a guess, and the caller is the one guessing.
+    `PartialPageOfPaginator`'s own docblock says why: `PageOf::$hasNext` was computed by asking the
+    store for one row more than the caller wanted, and `PartialPaginatorInterface` has no method to
+    carry it, so a page that is exactly full and also last advertises a next that leads nowhere.
+    That is the framework's limitation and it is the same one the JSON-LD `hydra:view` at this URL
+    has, which is the honest place for it to be: both representations are wrong in the same way, and
+    `total=exact` fixes both.
+#}
+{% set hasNext = hasNext|default(false) %}
+{% set last = last|default(null) %}
+
+{% if current > 1 or hasNext or (last is not null and last > 1) %}
+    <nav class="pages" aria-label="{{ label|default('Pages') }}">
+        {% if last is not null %}
+            {% for number in 1..last %}
+                <a class="pages__link"
+                   {% if number == current %}aria-current="page"{% endif %}
+                   href="{{ path }}?{{ query|merge({ page: number })|url_encode }}">{{ number }}</a>
+            {% endfor %}
+        {% else %}
+            {% if current > 1 %}
+                <a class="pages__link" href="{{ path }}?{{ query|merge({ page: current - 1 })|url_encode }}">{{ current - 1 }}</a>
+            {% endif %}
+            <a class="pages__link" aria-current="page" href="{{ path }}?{{ query|merge({ page: current })|url_encode }}">{{ current }}</a>
+            {% if hasNext %}
+                <a class="pages__link" href="{{ path }}?{{ query|merge({ page: current + 1 })|url_encode }}">{{ current + 1 }}</a>
+            {% endif %}
+        {% endif %}
+
+        {#
+            The count is drawn when there is one and is not invented when there is not. A page that
+            printed "page 2" and nothing else is telling the reader everything it knows, which is
+            what ADR 004 rule 9 means by a total being optional and separate.
+        #}
+        {% if total is defined and total is not null %}
+            <span class="pages__total meta">{{ total }} {{ noun|default('result') }}(s)</span>
+        {% endif %}
+    </nav>
+{% endif %}

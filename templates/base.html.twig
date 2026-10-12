@@ -1,0 +1,62 @@
+{#
+    The Odd Badge base template.
+
+    The five stylesheets are the design system's own, copied verbatim into `public/` and linked
+    with `asset()`: no build step, because the system ships plain CSS and a bundler would add a
+    decision nobody needs and a failure mode in `symfony serve`. The order matters, and it is the
+    order the design system's README gives: fonts, then the three token files, then the component
+    layer that spends them.
+
+    The theme is an attribute on `<html>`: absent means follow the operating system, and
+    `data-theme="light"` or `data-theme="dark"` pins it. Absent is what this template emits,
+    because no card asks for a switcher and a switcher invented here would be a product decision
+    taken in a foundation commit.
+
+    `lang` is read off the framework rather than passed in. ADR 007 resolves the locale from
+    `Accept-Language` through `framework.set_locale_from_accept_language`, negotiated down to
+    `default_locale` rather than answering 400, and nothing anywhere takes a locale as a
+    parameter. `app.locale` is the `LocaleSwitcher`'s answer, which is the request's locale
+    during a request and `default_locale` everywhere else; `app.request.locale` would be the
+    same value with a null to trip over the moment something renders outside one.
+
+    There is deliberately no navigation, no footer and no flash region here. Each of those
+    belongs to a card.
+#}
+<!DOCTYPE html>
+<html lang="{{ app.locale }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Odd Badge{% endblock %}</title>
+
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('fonts/fonts.css') }}">
+            <link rel="stylesheet" href="{{ asset('tokens/colors.css') }}">
+            <link rel="stylesheet" href="{{ asset('tokens/typography.css') }}">
+            <link rel="stylesheet" href="{{ asset('tokens/spacing.css') }}">
+            <link rel="stylesheet" href="{{ asset('styles.css') }}">
+        {% endblock %}
+
+        {% block javascripts %}
+        {% endblock %}
+
+        {#
+            The one hook a page has into `<head>`, and it is empty by default because everything
+            above it is the same for every page in the tree.
+
+            ADR 009 rule 15 is what asked for it: a `/me/...` page is a perspective on an explicit
+            `/members/{principal}/...` URL rather than a second resource, so it carries
+            `<link rel="canonical">` to the explicit one, and `/` will owe the same element when it
+            forwards to the discovery feed. A canonical link only counts in `<head>`, so a page with
+            nowhere to put one cannot obey the rule.
+
+            It is deliberately not called `meta` or `seo`. It is the place a page adds to the head,
+            and the next thing that belongs here is whatever the next card needs rather than
+            whatever this one happened to need first.
+        #}
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+    </body>
+</html>

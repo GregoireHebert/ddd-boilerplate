@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head_metas %}
+        <meta charset="UTF-8">
+    {% endblock %}
+
+    {% block title %}
+        <title>{% if title %}{{ title }} - {% endif %}Doc</title>
+    {% endblock %}
+
+    {% set oauth_data = {'oauth': swagger_data.oauth|merge({'redirectUrl' : absolute_url(asset('bundles/apiplatform/swagger-ui/oauth2-redirect.html', assetPackage)) })} %}
+
+    {% block head_javascript %}
+        {# json_encode(65) is for JSON_UNESCAPED_SLASHES|JSON_HEX_TAG to avoid JS XSS #}
+        <script id="swagger-data" type="application/json">{{ swagger_data|merge(oauth_data)|json_encode(65)|raw }}</script>
+    {% endblock %}
+</head>
+
+<body>
+
+<div id="swagger-ui" class="api-platform"></div>
+
+{% block javascript %}
+    <script src="{{ asset('bundles/apiplatform/redoc/redoc.standalone.js', assetPackage) }}"></script>
+    <script src="{{ asset('bundles/apiplatform/init-redoc-ui.js', assetPackage) }}"></script>
+    <script src="{{ asset('bundles/apiplatform/init-common-ui.js', assetPackage) }}" defer></script>
+{% endblock %}
+
+</body>
+</html>

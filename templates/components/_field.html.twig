@@ -1,0 +1,55 @@
+{#
+    A labelled control with its rule in prose and its violations hung off it. `forms/Field`.
+
+    Parameters:
+      label       the control's name, in the interface's voice
+      name        the form field name, used for `id` and for the violations' propertyPath
+      hint        optional, the rule as a sentence. Prose, never a regex, and written from the
+                  same domain constants the constraint cites so the two cannot drift
+      value       optional, what to put back in the control
+      violations  optional, a list of {message, code} already filtered to this field's
+                  propertyPath
+      type        optional, defaults to `text`
+
+    The `control` block is what a select or a textarea overrides, which means `{% embed %}` and
+    not `{% include %}`; an include cannot override a block.
+
+    THE RULE THIS PARTIAL CARRIES, and the reason it is foundation rather than one card's work:
+    a 422 with a list of violations and a 409 with one problem document render identically here.
+    Both arrive carrying a `propertyPath`, so the page uses it even when the failure came back
+    alone. Two exception branches in the controller, one visual result on the page. Option A
+    emits Symfony's constraint UUIDs and option B the declared codes; this template cannot tell
+    them apart and must not try.
+
+    The field keeps what was typed, including on a conflict. A form that clears itself punishes
+    the reader for the server's opinion.
+
+    The code renders quietly, in mono and `--ink-faint`, because it is what a reader quotes in a
+    bug report and what the RFC 9457 type is built from. It is never the loudest thing in the
+    message.
+
+    A query-parameter parse failure has no field to sit under, so it never comes here: ADR 004's
+    400 is a `_notice.html.twig` above the list, and the list still renders with the filters that
+    did parse.
+#}
+{% set violations = violations|default([]) %}
+<label class="field{{ violations is not empty ? ' field--invalid' : '' }}" for="{{ name }}">
+    <span class="field__label label">{{ label }}</span>
+    {% block control %}
+        <input class="input"
+               type="{{ type|default('text') }}"
+               id="{{ name }}"
+               name="{{ name }}"
+               value="{{ value|default('') }}"
+               {% if violations is not empty %}aria-invalid="true" aria-describedby="{% for violation in violations %}{{ name }}-violation-{{ loop.index }}{{ loop.last ? '' : ' ' }}{% endfor %}"{% endif %}>
+    {% endblock %}
+    {% if hint is defined and hint is not empty %}
+        <span class="field__hint body-sm">{{ hint }}</span>
+    {% endif %}
+    {% for violation in violations %}
+        <span class="violation body-sm" id="{{ name }}-violation-{{ loop.index }}">
+            <span>{{ violation.message }}</span>
+            <span class="violation__code code">{{ violation.code }}</span>
+        </span>
+    {% endfor %}
+</label>

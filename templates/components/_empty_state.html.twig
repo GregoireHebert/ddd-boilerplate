@@ -1,0 +1,31 @@
+{#
+    Nothing to show, said in the product's voice, with the one thing that would change it.
+    `lists/EmptyState`.
+
+    Parameters:
+      sentence  what happened, in the product's voice. Fraunces, because this is the product
+                speaking about itself rather than the interface labelling a control
+      detail    optional, one line of chrome under it. The filtered case says how many are
+                hidden, because that number is the argument for clearing the filter
+      action    optional, {label, href}: the way out. An empty state with no way out is a dead
+                end with good manners
+      pattern   optional, a BadgeDesign. The drawn badge is the only illustration this product
+                owns: no spot illustrations, no mascot, no empty-box icon. `.empty__mark` dims
+                it so it reads as an absence rather than as decoration
+
+    An empty list and an empty filter are different pages. "You have no badges" and "your filter
+    matched none of your badges" send the reader to two different places and only one of them is
+    the reader's fault; a card picks the sentence, this partial only renders it.
+#}
+<div class="empty">
+    {% if pattern is defined and pattern is not null %}
+        <div class="empty__mark">{{ badge(pattern, 120) }}</div>
+    {% endif %}
+    <p class="voice" style="margin:0 auto 8px">{{ sentence }}</p>
+    {% if detail is defined and detail is not empty %}
+        <p class="body-sm" style="margin:0 0 16px;color:var(--ink-muted)">{{ detail }}</p>
+    {% endif %}
+    {% if action is defined and action is not null %}
+        <a class="btn" href="{{ action.href }}">{{ action.label }}</a>
+    {% endif %}
+</div>

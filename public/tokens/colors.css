@@ -1,0 +1,81 @@
+/* Colour.
+   One rule governs this file: the five sock hues are CONTENT and everything
+   else is CHROME. A sock is the only saturated thing on any screen, so the
+   chrome never spends a hue it does not have to. That is why the primary
+   button is ink rather than blue, and why the signal colours below are
+   deliberately none of the five.
+
+   The sock hues are identical in both themes. A red sock is red at two in the
+   morning; theming it would mean the drawing carries a different fact
+   depending on the reader's operating system. Every one of them sits inside a
+   narrow luminance band so it clears 3:1 against both grounds without moving.
+
+   Contrast is stated per token in the comments and holds in BOTH themes. */
+
+:root {
+  /* Surfaces. Paper, in four washes. */
+  --linen-000: #faf6ef;   /* page ground */
+  --linen-100: #fffcf6;   /* a raised card on the page */
+  --linen-200: #f0e9de;   /* sunken: the composer well, a filter bar */
+  --linen-300: #e5dcce;   /* the operator surface, and "went back in the wash" */
+
+  --line:        #dcd2c2; /* hairline between things. Separation, not meaning */
+  --line-strong: #8d8069; /* 3.6:1. Control borders: inputs, quiet buttons */
+
+  /* Ink. */
+  --ink:         #241f1a; /* 15.3:1 on linen-000. Body copy and headings */
+  --ink-muted:   #5e564b; /* 6.7:1 on linen-000/100. Secondary prose */
+  --ink-faint:   #6f6759; /* 5.2:1 on linen-000. Metadata, timestamps */
+  --ink-inverse: #faf6ef; /* 15.3:1 on --ink. Text on an ink fill */
+
+  /* The five sock hues. Content. Never a button, never a border.
+     Each is 3.8:1 or better on linen-000 and 4.5:1 or better on the dark
+     ground, so the drawing survives both themes unchanged. */
+  --sock-red:    #c23a2b;
+  --sock-blue:   #3569b8;
+  --sock-green:  #3f7d4e;
+  --sock-yellow: #9e7717; /* a mustard, not a lemon: a lemon cannot clear the
+                             light ground and stay a sock on the dark one */
+  --sock-purple: #7a55b4;
+  --sock-thread: #f5ede0; /* the cream every motif is knitted in. 3.5:1 on the
+                             weakest sock hue, 4.7:1 on the strongest */
+
+  /* Signals. None of them is one of the five, on purpose: a red sock must
+     never be mistaken for an error, and a green one must never read as
+     success. Every use pairs the colour with a word or a mark. */
+  --go:           #12666b; /* 5.7:1 on linen-000. Live, verified, delivered */
+  --go-tint:      #e2f0f0;
+  --caution:      #a1521a; /* 4.7:1 on linen-000. Under ten minutes, watched */
+  --caution-tint: #f7e9d8;
+  --danger:       #8e2f22; /* 6.5:1 on linen-000. Gone, restricted, suspended */
+  --danger-tint:  #f6e2de;
+
+  /* The focus ring is ink and introduces no hue. It is 2px, offset 2px, so on
+     an ink-filled control it lands on the page ground and keeps its contrast. */
+  --focus: #241f1a;
+}
+
+/* Night wash. Only the chrome turns; the socks do not. */
+[data-theme="dark"] {
+  --linen-000: #171511;
+  --linen-100: #201d18;
+  --linen-200: #12100c;
+  --linen-300: #0e0c09;
+
+  --line:        #322e27;
+  --line-strong: #7d7361; /* 4.0:1 on linen-000 */
+
+  --ink:         #f2ebe0; /* 15.6:1 */
+  --ink-muted:   #b2a897; /* 7.9:1 */
+  --ink-faint:   #918876; /* 5.3:1 */
+  --ink-inverse: #171511;
+
+  --go:           #63cbd1; /* 8.3:1 on go-tint */
+  --go-tint:      #12262a;
+  --caution:      #e8a268; /* 7.3:1 on caution-tint */
+  --caution-tint: #2e2115;
+  --danger:       #f09383; /* 7.2:1 on danger-tint */
+  --danger-tint:  #2e1a17;
+
+  --focus: #f2ebe0;
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PATH 5. An ordinary path 1 mapping, for once, and that is the point: the outbox row has to be
+    written by the same UnitOfWork, in the same flush, in the same transaction as whatever caused
+    it. Anything cleverer here would defeat the pattern.
+
+    `payload` is a json column rather than a set of typed ones because the relay is generic; the
+    only thing the table knows about a message is its topic.
+-->
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Shared\Infrastructure\Persistence\Outbox\OutboxMessage" table="shared_outbox">
+        <indexes>
+            <!-- What the relay scans: everything not yet sent, oldest first. -->
+            <index name="idx_outbox_pending" columns="sent_at,recorded_at"/>
+        </indexes>
+
+        <id name="id" type="Id" column="id">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="topic" type="string" column="topic" length="120" nullable="false"/>
+        <field name="payload" type="json" column="payload" nullable="false"/>
+        <field name="recordedAt" type="datetime_immutable" column="recorded_at" nullable="false"/>
+        <field name="attempts" type="integer" column="attempts" nullable="false"/>
+        <field name="sentAt" type="datetime_immutable" column="sent_at" nullable="true"/>
+        <field name="lastError" type="string" column="last_error" length="500" nullable="true"/>
+    </entity>
+</doctrine-mapping>

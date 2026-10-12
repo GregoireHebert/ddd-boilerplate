@@ -1,0 +1,23 @@
+{#
+    One sentence standing where content is not: a rule, a state, or an explanation.
+    `moments/Notice`.
+
+    Parameters:
+      sentence  the one sentence. Say what happened rather than what you would like believed:
+                "we sent that to the maker", not "the catalogue was updated"
+      detail    optional, at most one line under it
+      tone      optional, one of `ended`, `caution`, `danger`. Omitted is the fourth look
+
+    Four borders, one shape, no icons and no filled backgrounds: filled banners get dismissed
+    unread, and this product's notices are usually the only thing on the page worth reading.
+
+    This is also where ADR 004's 400 lands. A query parameter that would not parse has no field
+    to sit under, so it is a notice above the list and the list still renders with the filters
+    that did parse.
+#}
+<div class="notice{{ tone is defined and tone is not empty ? ' notice--' ~ tone : '' }}">
+    <p class="body" style="margin:0">{{ sentence }}</p>
+    {% if detail is defined and detail is not empty %}
+        <p class="meta" style="margin:2px 0 0">{{ detail }}</p>
+    {% endif %}
+</div>

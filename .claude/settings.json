@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Bash(make phpstan)",
+      "Bash(vendor/bin/phpstan *)",
+      "Bash(vendor/bin/phpunit*)",
+      "Bash(php -l *)",
+      "Bash(php bin/console app:access*)",
+      "Bash(php bin/console app:messages*)",
+      "Bash(php bin/console app:paths*)",
+      "Bash(php bin/console app:reads*)",
+      "Bash(php bin/console debug:*)",
+      "Bash(php bin/console ecotone:list*)",
+      "Bash(php bin/console api:openapi:export*)",
+      "Bash(composer show*)",
+      "Bash(composer validate*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/adr-guard.sh\"",
+            "timeout": 10,
+            "statusMessage": "Checking the ADR rules"
+          }
+        ]
+      }
+    ]
+  }
+}

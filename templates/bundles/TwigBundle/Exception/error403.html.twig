@@ -1,0 +1,41 @@
+{#
+    The browser column of ADR 009 rule 11, middle row: authenticated, and refused.
+
+    FRAMEWORK PLUMBING, NOT A PAGE. Symfony's `TwigErrorRenderer` looks up
+    `@Twig/Exception/error{status}.html.twig` and this path overrides the bundle's own copy. There
+    is no controller, no route and no card behind it: it is the shape of a refusal a person reads,
+    and it is here rather than in a card because every guarded operation on the board shares it.
+
+    IT SAYS NOTHING, AND THAT IS ADR 008 RULE 14. No permission name, no identifier, no hint about
+    what exists. The JSON representation of this same refusal carries `shared.forbidden`, "You are
+    not allowed to do that.", with no parameters; this page is that sentence with a way out under
+    it, and the two must not drift into telling a reader different things. The permission that was
+    refused goes to the log, next to the actor and the operation, which is where somebody debugging
+    can use it.
+
+    NO CATALOGUE ENTRY. ADR 007 governs the words a *failure* carries, and a failure carries a
+    declared code that `FailureMessages` renders; page chrome is the delivery's own English, exactly
+    as `security/login.html.twig`'s labels are. `bin/console app:messages` counts what it counted
+    before this file.
+
+    `status_text` is deliberately unused. Symfony passes it, it is RFC 9110's reason phrase, and it
+    is protocol vocabulary rather than something to show a reader.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}Not allowed{% endblock %}
+
+{% block body %}
+    <main class="page">
+        <div class="stack-6" style="max-width:420px;margin:0 auto">
+            <h1 class="display-md">Not allowed</h1>
+
+            {% include 'components/_notice.html.twig' with {
+                sentence: 'You are not allowed to do that.',
+                tone: 'danger',
+            } only %}
+
+            <a class="btn" href="{{ path('app_login') }}">Sign in as somebody else</a>
+        </div>
+    </main>
+{% endblock %}

@@ -1,0 +1,72 @@
+# https://phpstan.org/blog/what-is-bleeding-edge
+includes:
+	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+    level: 6
+    paths:
+        - src
+
+    # The ONLY entry here, and it is a boilerplate artefact rather than a suppression: a trait with
+    # no user is exactly what an unstarted project looks like. `RenderViolations` turns a
+    # `ConstraintViolationList` into console output and exit code 22, which is ADR 004's rule for a
+    # parse failure on the command line; the first console write command that uses it makes this
+    # line removable, and removing it is the right move at that point.
+    ignoreErrors:
+        -
+            identifier: trait.unused
+            path: src/Ui/Console/Write/RenderViolations.php
+    symfony:
+        containerXmlPath: var/cache/dev/App_Shared_Infrastructure_Symfony_KernelDevDebugContainer.xml
+        consoleApplicationLoader: utils/phpstan/console-loader.php
+    doctrine:
+        objectManagerLoader: utils/phpstan/doctrine-object-manager.php
+    phpat:
+        ignore_built_in_classes: true
+    banned_code:
+        nodes:
+            # enable detection of echo
+            - type: Stmt_Echo
+              functions: null
+            # enable detection of eval
+            - type: Expr_Eval
+              functions: null
+            # enable detection of die/exit
+            - type: Expr_Exit
+              functions: null
+            # enable detection of a set of functions
+            - type: Expr_FuncCall
+              functions:
+                  - assert
+                  - dd
+                  - debug_backtrace
+                  - dump
+                  - exec
+                  - passthru
+                  - phpinfo
+                  - print_r
+                  - proc_open
+                  - shell_exec
+                  - system
+                  - var_dump
+            # enable detection of print statements
+            - type: Expr_Print
+              functions: null
+            # enable detection of shell execution by backticks
+            - type: Expr_ShellExec
+              functions: null
+
+services:
+    - class: App\Tests\Architecture\SharedArchitectureTest
+      tags:
+          - phpat.test
+    # **A new context means a test class in tests/phpstan/Architecture/ and an entry here**, or its
+    # namespace goes completely unchecked. There is no warning for the omission: phpat only ever
+    # reports on the rule sets it was given.
+    #
+    #  - class: App\Tests\Architecture\MembershipArchitectureTest
+    #    tags:
+    #        - phpat.test
+    - class: App\Tests\Architecture\UiArchitectureTest
+      tags:
+          - phpat.test

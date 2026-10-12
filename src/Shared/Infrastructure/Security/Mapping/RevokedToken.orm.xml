@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PATH 1, direct mapping, on the DEFAULT entity manager.
+
+    Two columns, and the primary key is the whole point: ADR 009 rule 9 makes the `jti` the row, so
+    "is this token revoked" is a lookup by identity and never a filter. That is what keeps a check
+    running on every authenticated request cheap enough to be a rule rather than an aspiration.
+
+    The type is `Id`, registered once for the whole project in config/packages/doctrine.php, because
+    a `jti` is an identifier like every other one in this tree (ADR 002) and is minted as a ULID by
+    `AccessTokens::issue()`. That also means the column takes the same platform-dependent shape as
+    every other identifier here, GUID or binary(16), rather than being a second opinion about how an
+    identifier is stored.
+
+    It shares the `UiSecurity` mapping directory with `Credential.orm.xml` because it shares its
+    namespace prefix, and Doctrine's MappingDriverChain gives one prefix one directory. It does not
+    share anything else: ADR 009's table splits the two precisely because they have different
+    lifetimes, and the day somebody wants to know which credential a revoked token belonged to, the
+    answer is that the question is not asked here (see `RevokedToken`'s docblock).
+
+    No `member_id`, no `revoked_by`, no `reason`. Each of those is an audit trail growing in a table
+    that is not one, and ADR 008 is explicit that an audit trail with retention, search and legal
+    weight is a product rather than a column somebody adds. `bin/console app:tokens:revoke` writes
+    the log line instead.
+
+    `revoked_at` carries an index because the only query anybody will ever want over this table is
+    the sweep ADR 009 describes, deleting rows older than `AccessTokens::LIFETIME`, whose `jti` can
+    no longer verify anyway. Nothing sweeps yet and `RevokedToken`'s docblock says so.
+-->
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Shared\Infrastructure\Security\RevokedToken" table="ui_revoked_token">
+        <indexes>
+            <index name="idx_revoked_token_revoked_at" columns="revoked_at"/>
+        </indexes>
+
+        <id name="jti" type="Id" column="jti">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="revokedAt" type="datetime_immutable" column="revoked_at" nullable="false"/>
+    </entity>
+</doctrine-mapping>

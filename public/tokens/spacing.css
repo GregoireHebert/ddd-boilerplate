@@ -1,0 +1,49 @@
+/* Space, shape and the four sock sizes. A 4px base throughout. */
+
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;   /* the default gutter inside a card */
+  --space-5: 20px;
+  --space-6: 24px;   /* between cards, and card padding at page level */
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;  /* between sections of a page */
+  --space-16: 64px;
+
+  --radius-sm: 4px;    /* tags and the square side of a swatch */
+  --radius-md: 10px;   /* inputs, buttons, chips */
+  --radius-lg: 16px;   /* cards, rows, dialogs */
+  --radius-xl: 24px;   /* the feed card and the pair interstitial only */
+  --radius-pill: 999px;
+
+  /* The four sock sizes, named for where they appear. Four and no more: the
+     renderer picks the motif pitch from this number, so an arbitrary size is
+     a drawing nobody checked. (wardrobe/12) */
+  --sock-xs: 32px;   /* conversation header */
+  --sock-sm: 64px;   /* pair header, timeline entry */
+  --sock-md: 120px;  /* directory, drawer, catalogue, admirers grids */
+  --sock-lg: 240px;  /* the feed card, the interstitial, the register preview */
+
+  --control-h: 40px;
+  --control-h-lg: 52px;  /* pass and like, which are thumb targets */
+  --tap-min: 44px;
+
+  /* A lost sock is content that is still there, so it dims. A disabled control
+     is a rule being explained, so it never dims: it changes fill and keeps its
+     text at full contrast. These two numbers are for content only. */
+  --opacity-lost: .4;    /* wardrobe/02: lost socks, sorted last */
+  --opacity-wash: .62;   /* matching/06: a pair that went back in the wash */
+
+  /* Borders, not shadows. Two exceptions, both of them literally stacks. */
+  --shadow-deck: 0 14px 30px -14px rgba(36, 31, 26, .34);
+  --shadow-menu: 0 10px 26px -10px rgba(36, 31, 26, .30);
+
+  --measure: 62ch;   /* prose never runs wider */
+}
+
+[data-theme="dark"] {
+  --shadow-deck: 0 14px 30px -14px rgba(0, 0, 0, .72);
+  --shadow-menu: 0 10px 26px -10px rgba(0, 0, 0, .66);
+}

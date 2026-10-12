@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ADR 007. The key is the failure's declared code, never its English sentence.
+
+  Keying a catalogue on the sentence is Symfony's and Twig's documented default and it is what the
+  implementation this ADR started from does. It costs four things that all compound: fixing a typo
+  orphans every translation, the key a translator sees is a whole sentence with placeholders in it,
+  the sentences need converting from printf to ICU on the way in, and the parameters end up
+  positional so nobody can reorder them. Keyed on the code, none of those exist.
+
+  This file is a deliverable, not a convenience. The English lives here and nowhere else: a
+  domain exception carries a code and a named parameter map, so a code with no entry here ships
+  its own raw code to a caller. `bin/console app:messages` is what makes sure that does not happen,
+  and it can only do that because the codes are declared as enum cases rather than found by a parser.
+
+  The domain is `failures`; the `+intl-icu` suffix is what routes it through PHP's MessageFormatter
+  instead of Symfony's strtr, which is how `{count, plural, ...}` and `{min, number}` work.
+-->
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="fr" datatype="plaintext" original="docs/ADR/007_translation.md">
+    <body>
+      <trans-unit id="shared.malformed-identifier" resname="shared.malformed-identifier">
+        <source>shared.malformed-identifier</source>
+        <target>« {value} » n’est pas un identifiant émis par cette application.</target>
+      </trans-unit>
+      <trans-unit id="payload.unprocessable" resname="payload.unprocessable">
+        <source>payload.unprocessable</source>
+        <target>{count, plural, one {Un champ de la charge utile n’a pas pu être accepté.} other {# champs de la charge utile n’ont pas pu être acceptés.}}</target>
+      </trans-unit>
+      <trans-unit id="shared.filter-unknown-value" resname="shared.filter-unknown-value">
+        <source>shared.filter-unknown-value</source>
+        <target>« {value} » n’est pas une valeur acceptée pour « {parameter} ». Valeurs possibles : {allowed}.</target>
+      </trans-unit>
+      <trans-unit id="shared.filter-missing" resname="shared.filter-missing">
+        <source>shared.filter-missing</source>
+        <target>« {parameter} » est obligatoire.</target>
+      </trans-unit>
+      <trans-unit id="shared.filter-not-a-boolean" resname="shared.filter-not-a-boolean">
+        <source>shared.filter-not-a-boolean</source>
+        <target>« {value} » n’est pas un booléen, ce qu’attend « {parameter} ».</target>
+      </trans-unit>
+      <trans-unit id="shared.filter-not-an-integer" resname="shared.filter-not-an-integer">
+        <source>shared.filter-not-an-integer</source>
+        <target>« {value} » n’est pas un entier, ce qu’attend « {parameter} ».</target>
+      </trans-unit>
+      <trans-unit id="shared.filter-not-an-identifier" resname="shared.filter-not-an-identifier">
+        <source>shared.filter-not-an-identifier</source>
+        <target>« {value} » n’est pas un identifiant, ce qu’attend « {parameter} ».</target>
+      </trans-unit>
+      <trans-unit id="shared.filter-not-a-date" resname="shared.filter-not-a-date">
+        <source>shared.filter-not-a-date</source>
+        <target>« {value} » n’est pas une date, ce qu’attend « {parameter} ».</target>
+      </trans-unit>
+      <trans-unit id="shared.page-below-one" resname="shared.page-below-one">
+        <source>shared.page-below-one</source>
+        <target>« {value} » n’est pas un numéro de page ; « {parameter} » commence à 1.</target>
+      </trans-unit>
+      <trans-unit id="shared.page-size-too-small" resname="shared.page-size-too-small">
+        <source>shared.page-size-too-small</source>
+        <target>« {value} » est trop petit pour « {parameter} » ; une page contient au moins un élément.</target>
+      </trans-unit>
+      <trans-unit id="shared.slice-size-too-small" resname="shared.slice-size-too-small">
+        <source>shared.slice-size-too-small</source>
+        <target>« {value} » est trop petit pour « {parameter} » ; une tranche contient au moins un élément.</target>
+      </trans-unit>
+      <trans-unit id="shared.filter-malformed-cursor" resname="shared.filter-malformed-cursor">
+        <source>shared.filter-malformed-cursor</source>
+        <target>La valeur de « {parameter} » n’est pas un curseur émis par ce point d’entrée.</target>
+      </trans-unit>
+      <trans-unit id="shared.remote-call-failed" resname="shared.remote-call-failed">
+        <source>shared.remote-call-failed</source>
+        <target>Un service dont dépend cette requête a répondu {status, number}.</target>
+      </trans-unit>
+      <trans-unit id="shared.remote-call-unreadable" resname="shared.remote-call-unreadable">
+        <source>shared.remote-call-unreadable</source>
+        <target>Un service dont dépend cette requête est injoignable.</target>
+      </trans-unit>
+      <trans-unit id="shared.not-authenticated" resname="shared.not-authenticated">
+        <source>shared.not-authenticated</source>
+        <target>Vous devez vous connecter pour faire cela.</target>
+      </trans-unit>
+      <trans-unit id="shared.forbidden" resname="shared.forbidden">
+        <source>shared.forbidden</source>
+        <target>Vous n’êtes pas autorisé à faire cela.</target>
+      </trans-unit>
+      <trans-unit id="shared.username-taken" resname="shared.username-taken">
+        <source>shared.username-taken</source>
+        <target>Quelqu’un se connecte déjà avec « {value} ».</target>
+      </trans-unit>
+      <trans-unit id="shared.precondition-failed" resname="shared.precondition-failed">
+        <source>shared.precondition-failed</source>
+        <target>Cela a changé depuis votre lecture ; rien n’a été appliqué. Relisez la ressource et renvoyez la nouvelle version.</target>
+      </trans-unit>
+      <trans-unit id="shared.precondition-required" resname="shared.precondition-required">
+        <source>shared.precondition-required</source>
+        <target>Cette écriture doit préciser quelle version elle modifie. Renvoyez la version lue dans un en-tête If-Match.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

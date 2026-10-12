@@ -1,0 +1,44 @@
+{#
+    The browser column of ADR 009 rule 11, bottom row: not found, or not yours.
+
+    FRAMEWORK PLUMBING, NOT A PAGE. Symfony's `TwigErrorRenderer` looks up
+    `@Twig/Exception/error{status}.html.twig` and this path overrides the bundle's own copy.
+
+    ONE PAGE FOR TWO CAUSES, ON PURPOSE. ADR 008 answers "this is not yours" with a `404` rather
+    than a `403`, because a `403` confirms that an identifier is real. A scoped provider makes that
+    free: a row that is not yours is a row that does not come back, so "nobody holds this" and "you
+    do not" arrive here as the same condition, and this page must not be able to tell them apart
+    either. Anything on it that hinted at which one happened would hand back exactly what the
+    status code was chosen to withhold.
+
+    ADR 007 rule 9 is the other half: the identifier the reader typed is not repeated. A ULID is on
+    no screen and in no password manager, the caller supplied it a moment ago, and printing it back
+    tells them nothing they can act on. The JSON representation of the same refusal already omits
+    it from `parameters()`, not just from the sentence.
+
+    NO CATALOGUE ENTRY. See `error403.html.twig`; the same reasoning applies and
+    `bin/console app:messages` counts what it counted before.
+
+    NO WAY OUT, AND IT IS REPORTED RATHER THAN INVENTED. `lists/EmptyState`'s docblock says an
+    empty state with no way out is a dead end with good manners, and this page is one. The link
+    that belongs here points at a home page, and there is no home route in this tree: ADR 009 says
+    `/` may forward to the discovery feed and owes a canonical link when it does, and nothing
+    builds it yet. `app_login` is the wrong target, because the commonest reader of this page is
+    already signed in. The first card that lands `/` gives this file its one line.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}Nothing here{% endblock %}
+
+{% block body %}
+    <main class="page">
+        <div class="stack-6" style="max-width:420px;margin:0 auto">
+            <h1 class="display-md">Nothing here</h1>
+
+            {% include 'components/_notice.html.twig' with {
+                sentence: 'We could not find that.',
+                detail: 'The address may be wrong, or it may belong to somebody else.',
+            } only %}
+        </div>
+    </main>
+{% endblock %}

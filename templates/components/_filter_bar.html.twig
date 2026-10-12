@@ -1,0 +1,62 @@
+{#
+    The bar across the top of a filtered list. `forms/FilterBar`.
+
+    Parameters:
+      form    a FormView from `filter_form()`, which is `App\Ui\Web\Query\FilterSetForm`
+      submit  optional, defaults to `Narrow it`
+      reset   optional, {label, href}: the way back to the unfiltered list
+
+    NOTHING IN THIS FILE NAMES A FILTER, and that is the whole point of the card it was written for.
+    Every control below comes from one `FilterSet`, the same declaration the OpenAPI parameters and
+    the console options come from, so adding `Filter::enum('condition', ...)` to
+    `App\Membership\Application\ReadModel\MemberDirectoryFilters` puts a dropdown here with its
+    choices and its hint already written, and this template does not change.
+
+    Compare `templates/membership/badge_model/collection.html.twig`, whose bar is two hand written
+    `<select>`s over `enum_cases()`. That is option A and it is the right amount of design for two
+    filters on one delivery; this is option B, and ADR 004 says to reach for it when a list carries
+    enough filters, or enough deliveries, that writing the surface three times starts being tedious.
+
+    IT SUBMITS WITH `GET`, NATIVELY, AND THAT IS NOT A HOLE IN ADR 009 RULE 6. That rule is about
+    writes: every resource write goes through `public/form.js` so its 422 comes back as JSON and is
+    painted onto the fields. Narrowing a list writes nothing. A native `GET` is what puts the
+    filters in the URL, which is what makes a filtered page a thing a reader can bookmark and send
+    to somebody, and it needs no JavaScript at all.
+
+    THE MARKUP IS THE DESIGN SYSTEM'S, NOT A FORM THEME'S. `form_label` and `form_widget` are called
+    one at a time rather than through `form_row`, because `form_row` would wrap each control in the
+    default theme's `<div>` and this bar is a flex row of `.filters__group`. The `.select` and
+    `.input` classes arrive on the widgets from `FilterSetForm::field()`, so a generated control and
+    a hand written one in `templates/components/_field.html.twig` are styled by the same rules in
+    `public/styles.css`. A Symfony form theme would have been the other way to get there, and would
+    have put this product's form markup in a second home that nobody editing `_field.html.twig`
+    would think to open.
+
+    THE HINT UNDER EACH CONTROL IS THE DECLARATION'S OWN SENTENCE. `Filter::$description` is the
+    OpenAPI parameter's `description`, the console option's `--help` line and this. One sentence,
+    written once, read by three deliveries, which is what option B buys and what the card calls its
+    third surface.
+
+    THERE IS NO `page` CONTROL HERE and `FilterSetForm` is where that is argued: a page number is a
+    position rather than a question, it is drawn by `templates/components/_pagination.html.twig`,
+    and a reader given two controls for one value will eventually set them to disagree.
+#}
+{{ form_start(form, {attr: {class: 'filters'}}) }}
+    {% for field in form %}
+        <div class="filters__group">
+            {{ form_label(field, null, {label_attr: {class: 'label'}}) }}
+            {{ form_widget(field) }}
+            {{ form_help(field, {help_attr: {class: 'field__hint body-sm'}}) }}
+        </div>
+    {% endfor %}
+
+    <div class="filters__group">
+        <button class="btn btn--primary" type="submit">{{ submit|default('Narrow it') }}</button>
+    </div>
+
+    {% if reset is defined and reset is not null %}
+        <div class="filters__group">
+            <a class="btn" href="{{ reset.href }}">{{ reset.label }}</a>
+        </div>
+    {% endif %}
+{{ form_end(form) }}

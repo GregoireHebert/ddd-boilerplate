@@ -1,0 +1,86 @@
+{#
+    What the Membership Plan is, said by naming the things you do not have. `moments/Gate`, its second
+    pane, the one the design system captions `GET /me/membership`, when you are not a member.
+
+    Parameters:
+      features  list of {name, where, href}: one gated feature, the page it affects, and optionally
+                that page's URL. `where` is prose rather than a path, and the next paragraph is why
+      heading   optional, defaults to `Membership Plan`
+      sentence  optional, one line under the heading. The product's own voice, so it is set in
+                `.voice` rather than in `.body`
+      link      optional, {label, href}: the way to the membership page, for a caller that is not
+                the membership page. The membership page itself overrides the `action` block below
+                with its join forms instead, because it is already where the link would have gone
+
+    AN UPSELL THAT DOES NOT SAY WHAT IS GATED IS A PAYWALL WITH A SLOGAN, which is `moments/Gate`'s
+    own sentence and the reason the feature list is required rather than optional. A gated feature
+    you cannot see is a gated feature nobody buys; a list of four named things with the page each
+    one affects is what lets a reader go and look at what they would be buying.
+
+    `where` IS PROSE AND NOT A URL, AND THAT IS A MEASUREMENT RATHER THAN A PREFERENCE. The design
+    system's preview writes `see who liked you &middot; /me/admirers`, and `bin/console debug:router`
+    has no `/me/admirers`, no discovery feed and no pair page: matching/02, matching/04, matching/07
+    and matching/10 are the four cards that gate these features and not one of them has landed. A
+    URL printed in mono that answers `404` is worse than a phrase, because it reads as a promise the
+    router does not keep. So each entry may carry an `href`, the phrase becomes a link the moment
+    one is passed, and the membership page passes none today.
+
+    THERE IS NO LOCK DRAWN HERE, and `moments/Gate` says why in one line: *"The lock is drawn once,
+    at 20px, and it is the only icon in the product that means money. It never appears on something
+    that is merely unavailable."* The lock belongs on the gated **control**, in the component's first
+    pane, which is matching/04's rewind button and matching/07's add-a-day button. This partial is
+    the other half of the same component, and a lock on a panel that is entirely about money would
+    be the icon saying what every word around it already says.
+
+    THIS IS A NARROWER REPRESENTATION AND NOT A REFUSAL. ADR 008's fourth question is entitlement,
+    and its answer is *"`422` with what would lift it, or a narrower representation"*; ADR 009 rule 1
+    says the representation is chosen by `Accept` and never by who is asking. Both hold here at once:
+    `GET /subscriptions` is one URL and one provider, and a reader with no membership is served the
+    same representation with nothing in it. Nothing is refused, so nothing answers `403`, and this
+    panel is what the page draws instead of an empty list. ADR 008 writes the argument out at
+    `docs/ADR/008_security.md`, "An entitlement is an upsell, not a wall".
+#}
+<div class="upsell">
+    <h3 class="title" style="margin:0">{{ heading|default('Membership Plan') }}</h3>
+
+    {% if sentence is defined and sentence is not empty %}
+        <p class="voice" style="margin:var(--space-2) 0 0">{{ sentence }}</p>
+    {% endif %}
+
+    {#
+        The four, by name, each with the page it affects. `.upsell__features` is the design system's
+        own class and it carries the indent and the muted ink, so there is nothing to style here.
+    #}
+    <ul class="upsell__features body-sm">
+        {% for feature in features %}
+            <li>
+                {{ feature.name }} &middot;
+                {% if feature.href is defined and feature.href is not null %}
+                    <a href="{{ feature.href }}">{{ feature.where }}</a>
+                {% else %}
+                    {{ feature.where }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {#
+        The control, which the design system's preview draws as one `Join` button and which this
+        partial leaves to the caller.
+
+        It is a block rather than a parameter because a transition is a form, by ADR 009 rule 6, and
+        a form is markup rather than a {label, href} pair: it carries `data-action`, `data-method`
+        and its hidden fields, and no hash of scalars can express that without this file learning
+        what a Membership Plan plan is. `components/_field.html.twig` makes the same move with its
+        `control` block, for the same reason.
+
+        The default arm is the link, for a caller that is drawing this panel somewhere a write would
+        be out of place: matching/02's quota refusal in the middle of the deck, for instance, where
+        the right control is a way to the membership page rather than a join form inside the feed.
+    #}
+    {% block action %}
+        {% if link is defined and link is not null %}
+            <a class="btn btn--primary" href="{{ link.href }}">{{ link.label }}</a>
+        {% endif %}
+    {% endblock %}
+</div>
